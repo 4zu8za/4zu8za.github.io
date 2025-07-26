@@ -1,162 +1,156 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>사주팔자 보기 - 점신 스타일</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 사주 추천</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
   <style>
     body {
+      font-family: 'Gowun Dodum', sans-serif;
+      background-color: #fff8f0;
       margin: 0;
       padding: 0;
-      font-family: 'Noto Serif KR', serif;
-      background: radial-gradient(#1a1a2e, #0f0f1a);
-      color: #f5f5dc;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      min-height: 100vh;
     }
-
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      color: #f1c40f;
-      text-shadow: 0 0 10px #f1c40f88;
+      margin-top: 2rem;
+      font-size: 2rem;
+      color: #ff6f61;
     }
-
     .container {
-      background: #222;
-      border: 2px solid #f1c40f;
-      border-radius: 10px;
+      background: white;
+      border-radius: 12px;
       padding: 2rem;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 0 20px #f1c40f55;
-    }
-
-    label {
-      display: block;
-      margin: 1rem 0 0.5rem;
-      font-size: 1rem;
-    }
-
-    input {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 480px;
       width: 100%;
+      margin-top: 1rem;
+    }
+    .input-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .input-row select {
+      width: 23%;
       padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 5px;
+      border-radius: 8px;
       border: 1px solid #ccc;
     }
-
     button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #f1c40f;
+      background-color: #ffb347;
+      color: white;
       border: none;
-      border-radius: 5px;
-      color: #000;
-      font-weight: bold;
-      font-size: 1.1rem;
+      border-radius: 8px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s;
+      margin-top: 1rem;
     }
-
-    button:hover {
-      background-color: #e1b400;
-    }
-
-    #result {
+    .result {
       margin-top: 2rem;
-      padding: 1.5rem;
-      border: 1px solid #f1c40f88;
-      background: #111;
-      border-radius: 10px;
-      color: #fff2cc;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #333;
     }
-
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      color: #999;
+    .note {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 0.5rem;
+    }
+    .similar-banner {
+      background-color: #ffe0cc;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      color: #d35400;
+      margin-bottom: 1rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>사주팔자 간단풀이</h1>
-
+  <h1>✨ 나의 AI 사주 보기 ✨</h1>
   <div class="container">
-    <label>생년월일</label>
-    <input type="date" id="birthDate" />
-
-    <label>시간 (예: 03:00)</label>
-    <input type="time" id="birthTime" />
-
-    <button onclick="showSaju()">사주 보기</button>
-
+    <div class="input-row">
+      <select id="year"></select>
+      <select id="month"></select>
+      <select id="day"></select>
+      <select id="time"></select>
+    </div>
+    <button onclick="findSaju()">사주 보기</button>
     <div id="result"></div>
   </div>
 
-  <div class="footer">
-    ⓒ 4zu8za | 참고: jeomsin.co.kr
-  </div>
-
   <script>
-    let sajuData = {};
+    const yearEl = document.getElementById("year");
+    const monthEl = document.getElementById("month");
+    const dayEl = document.getElementById("day");
+    const timeEl = document.getElementById("time");
+    const resultEl = document.getElementById("result");
+    let sajuData = [];
 
-    fetch('data.json')
-      .then(response => response.json())
-      .then(data => {
-        sajuData = data;
-        console.log("사주 데이터 로딩 완료");
-      })
-      .catch(error => console.error("데이터 로드 실패:", error));
+    const stems = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
+    const branches = ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
 
-    const heavenlyStems = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-    const earthlyBranches = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
-
-    function getGanjiByYear(year) {
-      const offset = year - 1984; // 기준: 갑자년
-      const stem = heavenlyStems[(offset % 10 + 10) % 10];
-      const branch = earthlyBranches[(offset % 12 + 12) % 12];
-      return stem + branch;
-    }
-
-    function showSaju() {
-      const dateInput = document.getElementById("birthDate").value;
-      const timeInput = document.getElementById("birthTime").value;
-
-      if (!dateInput || !timeInput) {
-        alert("생년월일시를 모두 입력해주세요.");
-        return;
-      }
-
-      const date = new Date(`${dateInput}T${timeInput}`);
-      const year = date.getFullYear();
-
-      const yearGanji = getGanjiByYear(year);
-      const monthGanji = "을사"; // 샘플용
-      const dayGanji = "무인";   // 샘플용
-      const hourGanji = "계축";  // 샘플용
-
-      const key = `${yearGanji}-${monthGanji}-${dayGanji}-${hourGanji}`;
-      const result = sajuData[key];
-      const resultDiv = document.getElementById("result");
-
-      if (result) {
-        resultDiv.innerHTML = `
-          <strong>당신의 사주</strong><br/>
-          년주: ${yearGanji}, 월주: ${monthGanji}, 일주: ${dayGanji}, 시주: ${hourGanji}<br/><br/>
-          <strong>설명:</strong> ${result.설명}<br/>
-          <strong>오행:</strong> ${result.오행}<br/>
-          <strong>용신:</strong> ${result.용신}
-        `;
-      } else {
-        resultDiv.innerHTML = `사주 데이터가 등록되어 있지 않습니다. (${key})`;
+    function fillSelect(el) {
+      for (let i = 0; i < stems.length; i++) {
+        for (let j = 0; j < branches.length; j++) {
+          const option = document.createElement("option");
+          option.value = stems[i] + branches[j];
+          option.text = stems[i] + branches[j];
+          el.appendChild(option);
+        }
       }
     }
+
+    fillSelect(yearEl);
+    fillSelect(monthEl);
+    fillSelect(dayEl);
+    fillSelect(timeEl);
+
+    async function loadData() {
+      const res = await fetch("data.json");
+      sajuData = await res.json();
+    }
+
+    function findSaju() {
+      const key = [yearEl.value, monthEl.value, dayEl.value, timeEl.value];
+      let match = sajuData.find(item => {
+        return JSON.stringify(item.key) === JSON.stringify(key);
+      });
+
+      let similarNote = "";
+      if (!match) {
+        // 유사한 사주 찾기 (단순히 키 중 일치하는 개수로 유사도 판단)
+        let maxScore = -1;
+        let bestMatch = null;
+        for (const item of sajuData) {
+          let score = 0;
+          for (let i = 0; i < 4; i++) {
+            if (item.key[i] === key[i]) score++;
+          }
+          if (score > maxScore) {
+            maxScore = score;
+            bestMatch = item;
+          }
+        }
+        match = bestMatch;
+        if (match) {
+          similarNote = `<div class='similar-banner'>정확한 사주는 없지만 비슷한 사주를 찾아드렸어요 😊</div>`;
+        } else {
+          resultEl.innerHTML = "<p>죄송해요! 비슷한 사주도 찾을 수 없었어요 😢</p>";
+          return;
+        }
+      }
+
+      resultEl.innerHTML = `${similarNote}<div class='result'>${match.content}</div>`;
+    }
+
+    loadData();
   </script>
 </body>
 </html>
