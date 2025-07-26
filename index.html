@@ -2,108 +2,113 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>귀여운 사주팔자 보기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>귀여운 사주 AI</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #fff8f0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff5f0;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 2rem;
-      text-align: center;
     }
     h1 {
-      color: #ff8a65;
+      color: #ff6b81;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
-    form {
-      background-color: #ffe0b2;
-      padding: 1.5rem;
-      border-radius: 12px;
-      display: inline-block;
-      margin-bottom: 2rem;
+    .form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
     }
     label {
       display: block;
-      margin: 0.5rem 0 0.2rem;
+      margin-top: 1rem;
+      font-weight: bold;
     }
-    input[type="datetime-local"] {
-      padding: 0.5rem;
-      border-radius: 6px;
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 0.5rem;
       border: 1px solid #ccc;
     }
     button {
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      background-color: #ffb74d;
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.2rem;
+      background-color: #ff6b81;
+      color: white;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 1rem;
       font-size: 1rem;
+      cursor: pointer;
     }
-    #result {
+    .result {
       margin-top: 2rem;
-      background-color: #fff3e0;
       padding: 1.5rem;
-      border-radius: 12px;
+      background: #fffbe0;
+      border: 2px dashed #ffb347;
+      border-radius: 1rem;
+      max-width: 600px;
     }
   </style>
 </head>
 <body>
-  <h1>🧡 나의 사주팔자 보기 🧡</h1>
-  <form id="sajuForm">
-    <label for="birth">태어난 날짜와 시간을 입력하세요:</label>
-    <input type="datetime-local" id="birth" name="birth" required />
-    <br />
-    <button type="submit">사주 보기 🔮</button>
-  </form>
+  <h1>🐣 귀여운 사주 AI</h1>
+  <div class="form">
+    <label for="birth">생년월일시를 입력하세요</label>
+    <input type="text" id="birth" placeholder="예: 1994-03-28 14:00" />
+    <button onclick="getSaju()">운세 보기</button>
+  </div>
 
-  <div id="result"></div>
+  <div class="result" id="result" style="display: none;">
+    <h2>🔮 사주 결과</h2>
+    <p><strong>사주:</strong> <span id="saju"></span></p>
+    <p><strong>설명:</strong> <span id="description"></span></p>
+    <p><strong>오행:</strong> <span id="element"></span></p>
+    <p><strong>용신:</strong> <span id="yongsin"></span></p>
+  </div>
 
   <script>
-    async function fetchSajuData() {
-      const response = await fetch("data.json");
-      return await response.json();
-    }
-
-    function getClosestSaju(data, birthKey) {
-      if (data[birthKey]) return data[birthKey];
-
-      // 가장 유사한 키 찾기 (년월일시 중 최대한 가까운 순으로 비교)
-      const keys = Object.keys(data);
-      const sorted = keys.sort((a, b) => {
-        return Math.abs(a.localeCompare(b));
-      });
-      return data[sorted[0]];
-    }
-
-    document.getElementById("sajuForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    async function getSaju() {
       const birthInput = document.getElementById("birth").value;
-      if (!birthInput) return;
-
-      const date = new Date(birthInput);
-      const y = date.getFullYear();
-      const m = (date.getMonth() + 1).toString().padStart(2, '0');
-      const d = date.getDate().toString().padStart(2, '0');
-      const h = date.getHours().toString().padStart(2, '0');
-      const birthKey = `${y}-${m}-${d}-${h}`;
-
-      const sajuData = await fetchSajuData();
-      const result = getClosestSaju(sajuData, birthKey);
+      if (!birthInput) return alert("생년월일시를 입력해주세요!");
 
       const resultDiv = document.getElementById("result");
-      if (result) {
-        resultDiv.innerHTML = `
-          <h2>🔮 사주 결과</h2>
-          <p><strong>사주:</strong> ${result.saju}</p>
-          <p><strong>설명:</strong> ${result.description}</p>
-          <p><strong>오행:</strong> ${result.elements}</p>
-          <p><strong>용신:</strong> ${result.yongsin}</p>
-        `;
-      } else {
-        resultDiv.innerHTML = `<p>죄송해요. 비슷한 사주도 찾을 수 없었어요 😢</p>`;
+      const sajuSpan = document.getElementById("saju");
+      const description = document.getElementById("description");
+      const element = document.getElementById("element");
+      const yongsin = document.getElementById("yongsin");
+
+      try {
+        const response = await fetch("data.json");
+        const data = await response.json();
+
+        // 🧠 여기에서 실제 사주 key를 구하는 부분은 대체로 서버나 AI API에서 처리
+        // 여기서는 간단히 랜덤 키 or 유사 키를 찾는 방식
+        const keys = Object.keys(data);
+
+        // 테스트용: 입력 문자열 해시 기반 유사 키 선택
+        const hash = Array.from(birthInput).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+        const idx = hash % keys.length;
+        const matchedKey = keys[idx];
+        const sajuData = data[matchedKey];
+
+        resultDiv.style.display = "block";
+        sajuSpan.textContent = matchedKey;
+        description.textContent = sajuData["설명"];
+        element.textContent = sajuData["오행"];
+        yongsin.textContent = sajuData["용신"];
+      } catch (err) {
+        alert("사주 데이터를 불러오는 데 실패했습니다.");
       }
-    });
+    }
   </script>
 </body>
 </html>
