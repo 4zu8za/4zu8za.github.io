@@ -1,111 +1,538 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>귀여운 사주팔자 웹</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #fff7f0;
-      text-align: center;
-      padding: 2rem;
-      color: #444;
-    }
-    h1 {
-      color: #f06292;
-    }
-    select, button {
-      padding: 0.5rem;
-      margin: 0.2rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-    }
-    .result {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background-color: #fff0f5;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주 팔자 - 온라인 사주 보기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .birth-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .saju-display {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .saju-display h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pillar {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .pillar h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .pillar .stem {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 5px;
+        }
+
+        .pillar .branch {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+
+        .analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .analysis-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .analysis-card p {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .trait {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .element-info {
+            text-align: center;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .element-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .element-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .birth-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .pillars {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .analysis {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>🧸 나의 사주팔자 보기</h1>
-  <p>생년월일시를 선택해주세요!</p>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 사주 팔자</h1>
+            <p>당신의 생년월일시로 사주를 알아보세요</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <form id="sajuForm">
+                    <div class="form-group">
+                        <label>생년월일</label>
+                        <div class="birth-inputs">
+                            <input type="number" id="year" placeholder="년 (예: 1990)" min="1900" max="2025" required>
+                            <input type="number" id="month" placeholder="월 (1-12)" min="1" max="12" required>
+                            <input type="number" id="day" placeholder="일 (1-31)" min="1" max="31" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>출생시간</label>
+                        <div class="time-inputs">
+                            <input type="number" id="hour" placeholder="시 (0-23)" min="0" max="23" required>
+                            <input type="number" id="minute" placeholder="분 (0-59)" min="0" max="59" value="0">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">사주 보기 🎯</button>
+                </form>
+            </div>
+            
+            <div id="result" class="result-section">
+                <div class="saju-display">
+                    <h3>🌟 당신의 사주 팔자</h3>
+                    <div class="pillars" id="pillars">
+                        <!-- 사주 팔자가 여기에 표시됩니다 -->
+                    </div>
+                </div>
+                
+                <div class="element-info" id="elementInfo">
+                    <!-- 오행 정보가 여기에 표시됩니다 -->
+                </div>
+                
+                <div class="analysis" id="analysis">
+                    <!-- 분석 결과가 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div>
-    <select id="year"></select> 년
-    <select id="month"></select> 월
-    <select id="day"></select> 일
-    <select id="hour"></select> 시
-  </div>
+    <script>
+        let sajuData = null;
 
-  <button onclick="getSaju()">🔮 사주 보기</button>
+        // 데이터 로드
+        async function loadSajuData() {
+            try {
+                const response = await fetch('data.json');
+                sajuData = await response.json();
+            } catch (error) {
+                console.error('데이터 로드 실패:', error);
+                alert('사주 데이터를 불러오는데 실패했습니다.');
+            }
+        }
 
-  <div class="result" id="result">
-    <h2>🔮 사주 결과</h2>
-    <p><strong>사주:</strong> <span id="saju"></span></p>
-    <p><strong>설명:</strong> <span id="description"></span></p>
-    <p><strong>오행:</strong> <span id="element"></span></p>
-    <p><strong>용신:</strong> <span id="yongshin"></span></p>
-  </div>
+        // 천간 계산
+        function getHeavenlyStem(year) {
+            return sajuData.heavenlyStems[(year - 4) % 10];
+        }
 
-  <script>
-    const years = document.getElementById('year');
-    const months = document.getElementById('month');
-    const days = document.getElementById('day');
-    const hours = document.getElementById('hour');
+        // 지지 계산
+        function getEarthlyBranch(year) {
+            return sajuData.earthlyBranches[(year - 4) % 12];
+        }
 
-    for (let y = 1950; y <= 2025; y++) {
-      years.innerHTML += `<option value="${y}">${y}</option>`;
-    }
-    for (let m = 1; m <= 12; m++) {
-      months.innerHTML += `<option value="${m}">${m}</option>`;
-    }
-    for (let d = 1; d <= 31; d++) {
-      days.innerHTML += `<option value="${d}">${d}</option>`;
-    }
-    for (let h = 0; h < 24; h++) {
-      hours.innerHTML += `<option value="${h}">${h}시</option>`;
-    }
+        // 월주 계산
+        function getMonthPillar(year, month) {
+            const yearStemIndex = (year - 4) % 10;
+            const monthStemBase = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0]; // 갑기년부터 시작
+            const monthStems = [
+                [4, 6, 8, 0, 2, 4, 6, 8, 0, 2, 4, 6], // 갑기년
+                [6, 8, 0, 2, 4, 6, 8, 0, 2, 4, 6, 8], // 을경년
+                [8, 0, 2, 4, 6, 8, 0, 2, 4, 6, 8, 0], // 병신년
+                [0, 2, 4, 6, 8, 0, 2, 4, 6, 8, 0, 2], // 정임년
+                [2, 4, 6, 8, 0, 2, 4, 6, 8, 0, 2, 4]  // 무계년
+            ];
+            
+            const stemGroup = Math.floor(yearStemIndex / 2);
+            const monthStem = sajuData.heavenlyStems[monthStems[stemGroup][month - 1]];
+            const monthBranch = sajuData.earthlyBranches[(month + 1) % 12];
+            
+            return { stem: monthStem, branch: monthBranch };
+        }
 
-    async function getSaju() {
-      const year = years.value;
-      const month = months.value;
-      const day = days.value;
-      const hour = hours.value;
+        // 일주 계산 (간단한 근사치)
+        function getDayPillar(year, month, day) {
+            const date = new Date(year, month - 1, day);
+            const dayCount = Math.floor(date.getTime() / (1000 * 60 * 60 * 24));
+            const stemIndex = (dayCount + 4) % 10;
+            const branchIndex = (dayCount + 2) % 12;
+            
+            return {
+                stem: sajuData.heavenlyStems[stemIndex],
+                branch: sajuData.earthlyBranches[branchIndex]
+            };
+        }
 
-      const response = await fetch('data.json');
-      const data = await response.json();
+        // 시주 계산
+        function getHourPillar(dayStem, hour) {
+            const dayStemIndex = sajuData.heavenlyStems.indexOf(dayStem);
+            const hourStemBase = [0, 2, 4, 6, 8, 0, 2, 4, 6, 8]; // 갑기일부터
+            const hourStems = [
+                [0, 2, 4, 6, 8, 0, 2, 4, 6, 8, 0, 2], // 갑기일
+                [2, 4, 6, 8, 0, 2, 4, 6, 8, 0, 2, 4], // 을경일
+                [4, 6, 8, 0, 2, 4, 6, 8, 0, 2, 4, 6], // 병신일
+                [6, 8, 0, 2, 4, 6, 8, 0, 2, 4, 6, 8], // 정임일
+                [8, 0, 2, 4, 6, 8, 0, 2, 4, 6, 8, 0]  // 무계일
+            ];
+            
+            const stemGroup = Math.floor(dayStemIndex / 2);
+            const hourIndex = Math.floor((hour + 1) / 2) % 12;
+            const hourStem = sajuData.heavenlyStems[hourStems[stemGroup][hourIndex]];
+            const hourBranch = sajuData.earthlyBranches[hourIndex];
+            
+            return { stem: hourStem, branch: hourBranch };
+        }
 
-      const sajuKey = calculateSajuKey(year, month, day, hour);
-      const result = data[sajuKey];
+        // 사주 계산
+        function calculateSaju(year, month, day, hour) {
+            const yearPillar = {
+                stem: getHeavenlyStem(year),
+                branch: getEarthlyBranch(year)
+            };
+            
+            const monthPillar = getMonthPillar(year, month);
+            const dayPillar = getDayPillar(year, month, day);
+            const hourPillar = getHourPillar(dayPillar.stem, hour);
+            
+            return {
+                year: yearPillar,
+                month: monthPillar,
+                day: dayPillar,
+                hour: hourPillar
+            };
+        }
 
-      document.getElementById('saju').textContent = sajuKey || '알 수 없음';
+        // 오행 분석
+        function analyzeElements(saju) {
+            const elements = {};
+            
+            // 각 기둥의 오행 계산
+            Object.values(saju).forEach(pillar => {
+                const stemElement = sajuData.elements[pillar.stem];
+                const branchElement = sajuData.branchElements[pillar.branch];
+                
+                elements[stemElement] = (elements[stemElement] || 0) + 1;
+                elements[branchElement] = (elements[branchElement] || 0) + 1;
+            });
+            
+            return elements;
+        }
 
-      if (result) {
-        document.getElementById('description').textContent = result.설명;
-        document.getElementById('element').textContent = result.오행;
-        document.getElementById('yongshin').textContent = result.용신;
-      } else {
-        document.getElementById('description').textContent = '정확한 사주 결과가 없습니다. 비슷한 유형을 분석 중이에요!';
-        document.getElementById('element').textContent = '-';
-        document.getElementById('yongshin').textContent = '-';
-      }
-    }
+        // 결과 표시
+        function displayResult(saju, year, month, day) {
+            const pillarsDiv = document.getElementById('pillars');
+            const elementInfoDiv = document.getElementById('elementInfo');
+            const analysisDiv = document.getElementById('analysis');
+            
+            // 사주 팔자 표시
+            const pillarNames = ['연주', '월주', '일주', '시주'];
+            const pillarKeys = ['year', 'month', 'day', 'hour'];
+            
+            pillarsDiv.innerHTML = '';
+            pillarKeys.forEach((key, index) => {
+                const pillar = saju[key];
+                const animal = sajuData.animals[pillar.branch];
+                
+                pillarsDiv.innerHTML += `
+                    <div class="pillar">
+                        <h4>${pillarNames[index]}</h4>
+                        <div class="stem">${pillar.stem}</div>
+                        <div class="branch">${pillar.branch}</div>
+                        <div style="font-size: 0.8em; color: #666; margin-top: 5px;">${animal}</div>
+                    </div>
+                `;
+            });
+            
+            // 오행 분석
+            const elements = analyzeElements(saju);
+            const mainElement = Object.keys(elements).reduce((a, b) => elements[a] > elements[b] ? a : b);
+            
+            elementInfoDiv.innerHTML = `
+                <h3>🌿 주요 오행</h3>
+                <div class="element-badge">${mainElement}</div>
+                <div style="margin-top: 15px;">
+                    ${Object.entries(elements).map(([element, count]) => 
+                        `<span class="element-badge" style="font-size: 1em;">${element}: ${count}</span>`
+                    ).join('')}
+                </div>
+            `;
+            
+            // 성격 분석
+            const dayMaster = saju.day.stem;
+            const personality = sajuData.personalities[dayMaster];
+            const fortune = sajuData.fortune[sajuData.elements[dayMaster]];
+            
+            analysisDiv.innerHTML = `
+                <div class="analysis-card">
+                    <h3>🎭 성격 분석</h3>
+                    <h4 style="color: #667eea; margin-bottom: 10px;">${personality.name}</h4>
+                    <p>${personality.description}</p>
+                    <div class="traits">
+                        ${personality.traits.map(trait => `<span class="trait">${trait}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3>💼 직업운</h3>
+                    <p>${fortune.career}</p>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3>💕 연애운</h3>
+                    <p>${fortune.love}</p>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3>🏥 건강운</h3>
+                    <p>${fortune.health}</p>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3>💰 재물운</h3>
+                    <p>${fortune.wealth}</p>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3>🔄 오행 상성</h3>
+                    <p><strong>좋은 오행:</strong> ${sajuData.compatibility[mainElement].good.join(', ')}</p>
+                    <p><strong>주의할 오행:</strong> ${sajuData.compatibility[mainElement].bad.join(', ')}</p>
+                </div>
+            `;
+            
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
 
-    function calculateSajuKey(year, month, day, hour) {
-      // 간단한 예시 매핑: 실제 간지 변환 로직은 별도로 구현 필요
-      const stems = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-      const branches = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
-      const y = stems[year % 10] + branches[year % 12];
-      const m = stems[month % 10] + branches[month % 12];
-      const d = stems[day % 10] + branches[day % 12];
-      const h = stems[hour % 10] + branches[hour % 12];
-      return `${y}-${m}-${d}-${h}`;
-    }
-  </script>
+        // 폼 제출 처리
+        document.getElementById('sajuForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!sajuData) {
+                alert('데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
+                return;
+            }
+            
+            const year = parseInt(document.getElementById('year').value);
+            const month = parseInt(document.getElementById('month').value);
+            const day = parseInt(document.getElementById('day').value);
+            const hour = parseInt(document.getElementById('hour').value);
+            
+            // 입력값 검증
+            if (year < 1900 || year > 2025) {
+                alert('년도는 1900년부터 2025년까지 입력 가능합니다.');
+                return;
+            }
+            
+            if (month < 1 || month > 12) {
+                alert('월은 1부터 12까지 입력해주세요.');
+                return;
+            }
+            
+            if (day < 1 || day > 31) {
+                alert('일은 1부터 31까지 입력해주세요.');
+                return;
+            }
+            
+            if (hour < 0 || hour > 23) {
+                alert('시간은 0부터 23까지 입력해주세요.');
+                return;
+            }
+            
+            const saju = calculateSaju(year, month, day, hour);
+            displayResult(saju, year, month, day);
+        });
+
+        // 페이지 로드 시 데이터 로드
+        window.addEventListener('load', loadSajuData);
+    </script>
 </body>
 </html>
