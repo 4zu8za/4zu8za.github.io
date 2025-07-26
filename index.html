@@ -104,18 +104,15 @@
   </div>
 
   <script>
-    const sajuData = {
-      "계유-을사-무인-계축": {
-        설명: "당신은 냉철한 분석력을 가진 타입입니다. 관운이 좋고 조직에서 두각을 나타냅니다.",
-        오행: "화가 강함. 수 부족.",
-        용신: "수"
-      },
-      "갑자-병인-정묘-경오": {
-        설명: "당신은 따뜻하고 창의적인 성향을 가졌습니다. 예술적 재능이 뛰어납니다.",
-        오행: "목과 화가 조화.",
-        용신: "금"
-      }
-    };
+    let sajuData = {};
+
+    fetch('data.json')
+      .then(response => response.json())
+      .then(data => {
+        sajuData = data;
+        console.log("사주 데이터 로딩 완료");
+      })
+      .catch(error => console.error("데이터 로드 실패:", error));
 
     const heavenlyStems = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
     const earthlyBranches = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
