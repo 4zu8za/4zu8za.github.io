@@ -13,7 +13,7 @@ body {
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 40px auto; /* 상하 40px, 좌우 auto */
     background: white;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
