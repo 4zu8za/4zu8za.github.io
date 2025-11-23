@@ -9,6 +9,15 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- 상단 메뉴 -->
+    <nav>
+        <a href="#about">사이트 소개</a> |
+        <a href="#saju-basics">사주란?</a> |
+        <a href="#five-elements">오행 설명</a> |
+        <a href="#zodiac-compatibility">궁합</a> |
+        <a href="/privacy.html">개인정보 처리방침</a>
+    </nav>
+
     <div class="container">
         <div class="header">
             <h1>🔮 사주 팔자</h1>
@@ -82,6 +91,70 @@
             </div>
         </div>
     </div>
+    
+    <div class="container">
+        <div class="header">
+            <h2>사이트 소개</h2>
+        </div>
+        <div class="content">
+            <div class="input-section">
+                <p>이 사이트는 생년월일과 출생 시간을 기반으로 사주를 간단하고 정확하게 확인할 수 있도록 만들어진 서비스입니다.</p>
+                <p>복잡한 명리학 지식이 없어도 누구나 쉽게 자신의 운세 흐름과 성향을 이해할 수 있도록 직관적인 UI로 구성했습니다.</p>
+                <p>앞으로 더 다양한 콘텐츠와 기능을 제공할 예정이며, 사용자에게 도움이 되는 정보를 지속적으로 업데이트하겠습니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h2>사주란?</h2>
+        </div>
+        <div class="content">
+            <div class="input-section">
+                <p>사주는 태어난 연 · 월 · 일 · 시 네 가지 기둥으로 구성되며, 이를 통해 타고난 기질과 인생의 흐름을 해석합니다.</p>
+                <p>명리학에서는 사람이 태어난 시점의 기운이 평생 영향을 미친다고 보며, 이를 음양오행과 천간·지지 체계로 분석합니다.</p>
+                <p>사주는 운세를 단순히 예측하는 도구가 아니라, 자신의 강점과 약점, 성향을 이해하는 데 도움을 주는 정보입니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h2>오행이란?</h2>
+        </div>
+        <div class="content">
+            <div class="input-section">
+                <p>오행은 목(木), 화(火), 토(土), 금(金), 수(水) 다섯 가지 기운을 의미하며 세상의 모든 흐름을 설명하는 기본 원리입니다.</p>
+                <ul>
+                    <li><b>목(木)</b>: 성장, 시작, 확장, 계획</li>
+                    <li><b>화(火)</b>: 열정, 에너지, 활동, 인기</li>
+                    <li><b>토(土)</b>: 안정, 신뢰, 중심, 균형</li>
+                    <li><b>금(金)</b>: 냉철함, 판단, 결단, 논리</li>
+                    <li><b>수(水)</b>: 지혜, 감성, 유연함, 창의성</li>
+                </ul>
+                <p>사주에서 오행의 균형은 매우 중요하며, 부족하거나 과한 기운이 어떤 영향을 주는지 파악하는 것이 핵심입니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h2>띠별 궁합</h2>
+        </div>
+        <div class="content">
+            <div class="input-section">
+                <p>띠별 궁합은 상대방과의 성향 조화, 대화 방식, 감정 표현 등을 파악하는 데 도움이 됩니다.</p>
+                <p>궁합은 좋고 나쁨을 단정 짓기 위한 것이 아니라 서로를 이해하고 관계를 풍부하게 만드는 데 목적이 있습니다.</p>
+                <p>예를 들어, 불(火) 기운이 강한 사람은 물(水) 기운이 강한 사람과 함께할 때 균형이 맞춰지고 서로에게 긍정적인 영향을 줄 수 있습니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align:center; margin:20px 0;">
+        &copy; 2025 4zu8za
+        <br>
+        <a href="/privacy.html">개인정보 처리방침</a>
+    </footer>
 
     <script>
         let sajuData = null;
@@ -528,16 +601,6 @@ ${personality.description}
         // 페이지 로드 시 데이터 로드
         window.addEventListener('load', loadSajuData);
     </script>
-
-    <hr>
-    <nav style="text-align:center; margin: 20px 0;">
-      <a href="/about.html">사이트 소개</a> |
-      <a href="/contents/saju-basics.html">사주란?</a> |
-      <a href="/contents/five-elements.html">오행 설명</a> |
-      <a href="/contents/zodiac-compatibility.html">궁합</a> |
-      <a href="/contents/saju-yearly.html">2025 운세</a> |
-      <a href="/privacy.html">개인정보 처리방침</a>
-    </nav>
 
 </body>
 </html>
