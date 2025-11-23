@@ -107,12 +107,6 @@ body {
     padding: 20px 0; /* container 안쪽 여백 */
 }
 
-.paragraph {
-    margin-bottom: 15px; /* p태그 간 간격 */
-    line-height: 1.7;    /* 줄글 느낌 */
-    color: #333;
-}
-
 .result-section {
     display: none;
     animation: fadeIn 0.5s ease-in;
