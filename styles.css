@@ -299,6 +299,27 @@ body {
     display: none;
 }
 
+/* 필수 내비게이션 (애드센스 승인에 도움) */
+.nav-bar {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #222;
+    margin-bottom: 20px;
+}
+
+.nav-bar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    display: inline-block;
+}
+
+.nav-bar a:hover {
+    background-color: #444;
+}
+
+
 @media (max-width: 768px) {
     .birth-inputs {
         grid-template-columns: 1fr;
